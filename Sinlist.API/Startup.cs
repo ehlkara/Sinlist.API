@@ -1,12 +1,15 @@
+using Abp.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Sinlist.Core.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +19,7 @@ namespace Sinlist.API
 {
     public class Startup
     {
+        private const string _defaultCorsPolicyName = "localhost";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -26,6 +30,21 @@ namespace Sinlist.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(typeof(Startup));
+            services.AddDbContext<SinlistDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                    _defaultCorsPolicyName,
+                    builder => builder
+                    .WithOrigins(Configuration["App:CorsOrigins"]
+                                .Split(",", StringSplitOptions.RemoveEmptyEntries)
+                                .Select(o => o.RemovePostFix("/"))
+                                .ToArray())
+                    .AllowAnyHeader()
+                    .AllowAnyMethod());
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -49,6 +68,8 @@ namespace Sinlist.API
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors(_defaultCorsPolicyName);
 
             app.UseEndpoints(endpoints =>
             {
