@@ -9,7 +9,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Sinlist.BusinessLogic.Abstract;
+using Sinlist.BusinessLogic.Service;
 using Sinlist.Core.Context;
+using Sinlist.DataAccess.Abstract;
+using Sinlist.DataAccess.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +36,8 @@ namespace Sinlist.API
         {
             services.AddAutoMapper(typeof(Startup));
             services.AddDbContext<SinlistDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
-
+            services.AddScoped<ITodoListDAL, TodoListDAL>();
+            services.AddScoped<ITodolistBLL, TodolistBLL>();
             services.AddCors(options =>
             {
                 options.AddPolicy(

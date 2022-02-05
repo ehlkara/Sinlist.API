@@ -5,15 +5,17 @@ using Sinlist.DataAccess.Abstract;
 using Sinlist.Models.Entities.Sinlist;
 using Sinlist.Models.Errors;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Sinlist.DataAccess.Concrete
 {
-    public class TodoListService : ITodoListService
+    public class TodoListDAL : ITodoListDAL
     {
         protected readonly SinlistDbContext _context;
 
-        public TodoListService(SinlistDbContext context)
+        public TodoListDAL(SinlistDbContext context)
         {
             _context = context;
             _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
@@ -38,6 +40,8 @@ namespace Sinlist.DataAccess.Concrete
         {
             try
             {
+                var todolist = await GetTodoListById(todoListItem.TodoListId);
+                todoListItem.TodoListId = todolist.Id;
                 await _context.TodoListItems.AddAsync(todoListItem);
                 await _context.SaveChangesAsync();
 
@@ -54,6 +58,15 @@ namespace Sinlist.DataAccess.Concrete
         {
             try
             {
+                var todoListItems = await GetTodoListItemsById(todoList.Id);
+                foreach (var item in todoListItems)
+                {
+                    item.IsDelete = true;
+                    item.IsActive = false;
+                    item.DeletedTime = DateTime.Now;
+
+                    await UpdateTodoListItem(item);
+                }
                 var todoListResult = await _context.TodoLists.FindAsync(todoList.Id);
                 _context.TodoLists.Remove(todoListResult);
                 await _context.SaveChangesAsync();
@@ -79,6 +92,34 @@ namespace Sinlist.DataAccess.Concrete
             }
             catch (Exception ex)
             {
+                throw new UserFriendlyException((int)ErrorCodes.TodoNotFound, ErrorMessages.TodoNotFound, ex.Message);
+            }
+        }
+
+        public async Task<TodoList> GetTodoListById(int todoListId)
+        {
+            try
+            {
+                var todoList = await _context.TodoLists.FirstOrDefaultAsync(x=> x.Id==todoListId && x.IsDelete!=true);
+                return todoList;
+            }
+            catch (Exception ex)
+            {
+
+                throw new UserFriendlyException((int)ErrorCodes.TodosNotFound, ErrorMessages.TodosNotFound, ex.Message);
+            }
+        }
+
+        public async Task<List<TodoListItem>> GetTodoListItemsById(int todoListId)
+        {
+            try
+            {
+                var todoListItems = await _context.TodoListItems.Where(x => x.IsDelete != true && x.TodoListId == todoListId).ToListAsync();
+                return todoListItems;
+            }
+            catch (Exception ex)
+            {
+
                 throw new UserFriendlyException((int)ErrorCodes.TodoNotFound, ErrorMessages.TodoNotFound, ex.Message);
             }
         }
@@ -111,6 +152,9 @@ namespace Sinlist.DataAccess.Concrete
                 todoListItemResult.Name = todoListItem.Name;
                 todoListItemResult.Description = todoListItem.Description;
                 todoListItemResult.Count = todoListItem.Count;
+                todoListItem.IsDelete = todoListItem.IsDelete;
+                todoListItem.IsActive = todoListItem.IsActive;
+                todoListItem.DeletedTime = todoListItem.DeletedTime;
 
                 _context.TodoListItems.Update(todoListItem);
                 await _context.SaveChangesAsync();
