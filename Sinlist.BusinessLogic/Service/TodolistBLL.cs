@@ -60,6 +60,12 @@ namespace Sinlist.BusinessLogic.Service
             return _mapper.Map<List<TodoListItemDto>>(todolistItems);
         }
 
+        public async Task<List<TodoListDto>> GetTodoLists(string deviceInfo)
+        {
+            var todolist = await _todoListDAL.GetTodoLists(deviceInfo);
+            return _mapper.Map<List<TodoListDto>>(todolist);
+        }
+
         public async Task<TodoListDto> UpdateTodoList(TodoListDto todoList)
         {
             var mappedTodo = _mapper.Map<TodoList>(todoList);

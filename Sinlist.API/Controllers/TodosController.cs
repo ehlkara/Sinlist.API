@@ -144,5 +144,20 @@ namespace Sinlist.API.Controllers
                 return await Response<List<TodoListItemDto>>.Catch(new ResponseError { Message = ex.Message });
             }
         }
+
+        [HttpGet("get_todolist")]
+        public async Task<Response<List<TodoListDto>>> GetTodoLists(string deviceInfo)
+        {
+            try
+            {
+                var responseDto = await _todolistBLL.GetTodoLists(deviceInfo);
+                return await Response<List<TodoListDto>>.Run(responseDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return await Response<List<TodoListDto>>.Catch(new ResponseError { Message = ex.Message });
+            }
+        }
     }
 }

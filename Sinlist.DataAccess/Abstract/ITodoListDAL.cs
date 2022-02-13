@@ -11,6 +11,7 @@ namespace Sinlist.DataAccess.Abstract
         Task<TodoList> UpdateTodoList(TodoList todoList);
         Task<bool> DeleteTodolist(TodoList todoList);
         Task<TodoList> GetTodoListById(int todoListId);
+        Task<List<TodoList>> GetTodoLists(string deviceInfo);
 
         // TODOITEM
         Task<TodoListItem> AddTodolistItem(TodoListItem todoListItem);

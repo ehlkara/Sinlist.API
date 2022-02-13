@@ -124,6 +124,20 @@ namespace Sinlist.DataAccess.Concrete
             }
         }
 
+        public async Task<List<TodoList>> GetTodoLists(string deviceInfo)
+        {
+            try
+            {
+                var todolist = await _context.TodoLists.Where(x => x.DeviceInfo == deviceInfo).ToListAsync();
+                return todolist;
+            }
+            catch (Exception ex)
+            {
+
+                throw new UserFriendlyException((int)ErrorCodes.TodosNotFound, ErrorMessages.TodosNotFound, ex.Message);
+            }
+        }
+
         public async Task<TodoList> UpdateTodoList(TodoList todoList)
         {
             try

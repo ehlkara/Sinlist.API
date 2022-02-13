@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sinlist.Core.Context;
 
 namespace Sinlist.Core.Migrations
 {
     [DbContext(typeof(SinlistDbContext))]
-    partial class SinlistDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220213093520_added_device_info")]
+    partial class added_device_info
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
