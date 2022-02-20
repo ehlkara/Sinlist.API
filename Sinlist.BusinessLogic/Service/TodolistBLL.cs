@@ -43,8 +43,8 @@ namespace Sinlist.BusinessLogic.Service
 
         public async Task<bool> DeleteTodoListItem(int todoListItemId)
         {
-            var todolistItems = await GetTodoListItemsById(todoListItemId);
-            var mappedTodolistItem = _mapper.Map<TodoListItem>(todolistItems);
+            var todolistItem = await _todoListDAL.GetTodoListItemById(todoListItemId);
+            var mappedTodolistItem = _mapper.Map<TodoListItem>(todolistItem);
             return await _todoListDAL.DeleteTodoListItem(mappedTodolistItem);
         }
 

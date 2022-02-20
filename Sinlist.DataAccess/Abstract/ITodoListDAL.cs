@@ -18,5 +18,6 @@ namespace Sinlist.DataAccess.Abstract
         Task<TodoListItem> UpdateTodoListItem(TodoListItem todoListItem);
         Task<bool> DeleteTodoListItem(TodoListItem todoListItem);
         Task<List<TodoListItem>> GetTodoListItemsById(int todoListId);
+        Task<TodoListItem> GetTodoListItemById(int todolistItemId);
     }
 }

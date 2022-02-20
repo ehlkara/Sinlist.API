@@ -68,7 +68,10 @@ namespace Sinlist.DataAccess.Concrete
                     await UpdateTodoListItem(item);
                 }
                 var todoListResult = await _context.TodoLists.FindAsync(todoList.Id);
-                _context.TodoLists.Remove(todoListResult);
+                todoListResult.IsDelete = true;
+                todoListResult.IsActive = false;
+                todoListResult.DeletedTime = DateTime.Now;
+                _context.TodoLists.Update(todoListResult);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -108,6 +111,12 @@ namespace Sinlist.DataAccess.Concrete
 
                 throw new UserFriendlyException((int)ErrorCodes.TodosNotFound, ErrorMessages.TodosNotFound, ex.Message);
             }
+        }
+
+        public async Task<TodoListItem> GetTodoListItemById(int todolistItemId)
+        {
+            var todolistItem = await _context.TodoListItems.FirstOrDefaultAsync(x => x.Id == todolistItemId);
+            return todolistItem;
         }
 
         public async Task<List<TodoListItem>> GetTodoListItemsById(int todoListId)
