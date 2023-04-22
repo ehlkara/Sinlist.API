@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Entities\" />
+    <None Remove="Entities\Core\" />
+    <None Remove="Entities\Sinlist\" />
+    <None Remove="Errors\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Entities\" />
+    <Folder Include="Entities\Core\" />
+    <Folder Include="Entities\Sinlist\" />
+    <Folder Include="Errors\" />
+  </ItemGroup>
+</Project>
