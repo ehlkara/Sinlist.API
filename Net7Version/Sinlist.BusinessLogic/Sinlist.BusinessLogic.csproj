@@ -9,4 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Sinlist.Core\Sinlist.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+  </ItemGroup>
 </Project>

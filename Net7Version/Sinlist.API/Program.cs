@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Sinlist.Core.Context;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,9 +14,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<SinlistDbContext>(x =>
 {
-    x.UseSqlServer(builder.Configuration.GetConnectionString("SqlCon"), options =>
+    x.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection"), options =>
     {
-        options.MigrationsAssembly("Sinlist.Core");
+        options.MigrationsAssembly(Assembly.GetAssembly(typeof(SinlistDbContext)).GetName().Name);
     }).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 
