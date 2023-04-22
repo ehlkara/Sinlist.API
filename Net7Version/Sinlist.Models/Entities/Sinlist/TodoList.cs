@@ -10,6 +10,7 @@ namespace Sinlist.Models.Entities.Sinlist
 		public int Id { get; set; }
 		public string Name { get; set; }
 		public string DeviceInfo { get; set; }
+		public List<TodoListItem> TodoListItems { get; set; }
 	}
 }
 
