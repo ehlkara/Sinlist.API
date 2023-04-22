@@ -6,4 +6,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Sinlist.Core\Sinlist.Core.csproj" />
+  </ItemGroup>
 </Project>
