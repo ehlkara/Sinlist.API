@@ -29,7 +29,7 @@ namespace Sinlist.DataAccess.Concrete
 
         public async Task<bool> DeleteTodoListItem(TodoListItem todoListItem)
         {
-            var todolistItemResult = await _context.TodoListItems.FirstOrDefaultAsync(x => x.TodoList.Id == todoListItem.TodoListId);
+            var todolistItemResult = await _context.TodoListItems.Where(x => x.TodoListId == todoListItem.TodoListId && x.Id == todoListItem.Id).FirstOrDefaultAsync();
 
             todolistItemResult.IsActive = false;
             todolistItemResult.IsDelete = true;
